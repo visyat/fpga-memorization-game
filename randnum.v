@@ -3,13 +3,16 @@ module randnum (
     randInt
 );
     input rst;
-    output reg [13:0] randInt;
+    output reg [15:0] randInt;
 
-    reg [13:0] storeRand;
+    reg [15:0] storeRand;
 
     always (*) begin
         if (rst) begin
-            storeRand = $urandom%9999;
+            storeRand[3:0] = $urandom%9;
+            storeRand[7:4] = $urandom%9;
+            storeRand[11:8] = $urandom%9;
+            storeRand[15:12] = $urandom%9;
         end
         randInt = storeRand;
     end
@@ -20,8 +23,8 @@ module checkInput(
     randInt,
     correct
 );
-    input [13:0] userInt;
-    input [13:0] randInt; 
+    input [15:0] userInt;
+    input [15:0] randInt; 
     
     output reg correct;
 
