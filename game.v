@@ -40,7 +40,8 @@ module game (
 
     // Remaining Modules: 
     // 1. Random Number Gen + Storage/Memory
-    // 2. 
+    // 2. Recieving/debouncing Keyboard Data
+    // 3. Display 
     
 
 endmodule
