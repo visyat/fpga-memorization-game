@@ -12,6 +12,7 @@ module clockdiv (
 
     output reg fastClk;
     output reg blinkClk;
+    output reg readClk;
 
     reg [31:0] fastCounter;
     reg [31:0] blinkCounter;

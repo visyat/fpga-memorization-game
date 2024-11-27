@@ -24,6 +24,8 @@ module display(
     output reg [3:0] anodeActivate;
     output reg [6:0] LED_out;
 
+    reg blinkState;
+
     reg [3:0] LED_BCD;
     wire [1:0] digitSelect;
     reg [1:0] digitCounter;

@@ -7,7 +7,7 @@ module randnum (
 
     reg [15:0] storeRand;
 
-    always (*) begin
+    always @(*) begin
         if (rst) begin
             storeRand[3:0] = $urandom%9;
             storeRand[7:4] = $urandom%9;
@@ -28,7 +28,7 @@ module checkInput(
     
     output reg correct;
 
-    always(*) begin
+    always @(*) begin
         if (userInt == randInt) begin
             correct <= 1;
         end else begin
