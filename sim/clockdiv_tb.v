@@ -2,9 +2,9 @@ module clockdiv_tb;
     reg clk;
     reg rst;
 
-    reg fastClk;
-    reg blinkClk;
-    reg readClk;
+    wire fastClk;
+    wire blinkClk;
+    wire readClk;
 
     clockdv clockdiv_mod(
         .clk(clk),

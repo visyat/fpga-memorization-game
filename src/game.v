@@ -1,22 +1,17 @@
 `timescale 1ns / 1ps
 
 module game (
-    clk, 
-    PS2Clk,
-    PS2Data,
-    btnS,
+    clk,
+    rst,
     btnR,
+    btnS,
     an,
     seg
 );
     input clk;
-    input PS2Clk;
-    input PS2Data;
+    input rst;
+    input btnR;
     input btnS;
-    input btnR; 
-
-    reg manualRst;
-    assign btnR = manualRst;
 
     output reg [3:0] an;
     output reg [6:0] seg;
@@ -24,75 +19,74 @@ module game (
     wire [3:0] anWire;
     wire [6:0] segWire;
 
-    wire [31:0] keyInput;
-
-    // state registers 
-    reg gameOn; 
-    reg displayPhase;
-    reg enterPhase;
-
     wire fastClk;
     wire blinkClk;
+    wire readClk;
 
     wire [15:0] randInt;
-    wire [15:0] userInput;
-    wire correct;
-    wire userInputReady;
 
-    clockdiv clockdivMod (
+    wire [15:0] userInt;
+    wire ready;
+
+    wire correct;
+
+    reg displayPhase;
+    reg [29:0] displayDelay;
+
+    clockdiv clockdiv_mod (
         .clk(clk),
-        .rst(btnR),
+        .rst(rst),
         .fastClk(fastClk),
-        .blinkClk(blinkClk)
+        .blinkClk(blinkClk),
+        .readClk(readClk)
     );
-    randnum randMod (
-        .rst(btnR),
+    randnum randnum_mod (
+        .rst(rst),
         .randInt(randInt)
     );
-    //insert modules
-    keyboard_decoder keyboard_decoder (
-        .masterClk(clk)
-        .value(userInput)
-        .row(/*not sure what goes here*/)
-        .rst(btnR)
-        .valueReady(userInputReady)
-    )
-    checkInput checkMod (
-        .userInput(userInput),
+
+    // parse keyboard data 
+        // 1. debouncers for keyboard buttons
+        // 2. load characters into some module 
+    /*
+    module userInputLoader(
+        ...
+        .userInt(userInt),
+        .ready(ready)
+    );
+    */
+
+    checkInput check_mod(
+        .userInt(userInt),
         .randInt(randInt),
         .correct(correct)
     );
-    display displayMod (
-        .displayPhase(displayPhase),
+    display display_mod(
+        .displayPhase(displayPhase), // PENDING
         .correct(correct), 
         .randInt(randInt),
-        .userInput(userInput),
-        .inputReady(userInputReady),
-        .rst(btnR), 
+        .userInput(userInput), // PENDING
+        .inputReady(ready), // PENDING
+        .rst(rst), 
         .fastClk(fastClk),
         .blinkClk(blinkClk),
         .anodeActivate(anWire),
         .LED_out(segWire)
     );
 
-    // Remaining Modules: 
-    // 1. Random Number Gen + Storage/Memory
-    // 2. Recieving/debouncing Keyboard Data
-    // 3. Wait until 4 integers have been inputed 
-    // 3. Display 
-    
-    always(*) begin
-        if (rst) begin
-            displayPhase <= 0;
-            #10 displayPhase <= 1;
-        end
-        // if (inputReady) begin
-        //     #10 manualRst = 1;
-        //     #5 manualRst = 0;
-        // end
-
+    always @(*) begin
         an = anWire;
-        seg = segWire;
+        seg = segWire
     end
-    
+    always @(posedge clk) begin
+        if (rst) begin
+            displayPhase = 1;
+            displayDelay = 0;
+        end else begin
+          if (displayDelay == 500000000) begin
+            displayPhase = 0;
+          end
+        end
+    end
+
 endmodule

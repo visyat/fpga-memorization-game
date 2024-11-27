@@ -46,6 +46,7 @@ module display(
             blinkState <= 0;
         end
     end
+    
     always @(*) begin
         if (blinkState) begin
             anodeActivate = 4'b1111;
