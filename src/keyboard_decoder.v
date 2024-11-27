@@ -16,7 +16,6 @@ module keyboard_decoder (
         collect_input_timer <= 0;
         curr_value <= 15;
     end
- 
     always @(posedge masterClk or posedge rst) begin
         if (rst) {
             value <= 4'ffff;

@@ -50,7 +50,6 @@ module game (
         .randInt(randInt)
     );
     //insert modules
-
     keyboard_decoder keyboard_decoder (
         .masterClk(clk)
         .value(userInput)
@@ -58,7 +57,6 @@ module game (
         .rst(btnR)
         .valueReady(userInputReady)
     )
-
     checkInput checkMod (
         .userInput(userInput),
         .randInt(randInt),
@@ -68,8 +66,8 @@ module game (
         .displayPhase(displayPhase),
         .correct(correct), 
         .randInt(randInt),
-        .userInput(),
-        .inputReady(),
+        .userInput(userInput),
+        .inputReady(userInputReady),
         .rst(btnR), 
         .fastClk(fastClk),
         .blinkClk(blinkClk),
@@ -82,15 +80,16 @@ module game (
     // 2. Recieving/debouncing Keyboard Data
     // 3. Wait until 4 integers have been inputed 
     // 3. Display 
+    
     always(*) begin
         if (rst) begin
             displayPhase <= 0;
             #10 displayPhase <= 1;
         end
-        if (inputReady) begin
-            #10 manualRst = 1;
-            #5 manualRst = 0;
-        end
+        // if (inputReady) begin
+        //     #10 manualRst = 1;
+        //     #5 manualRst = 0;
+        // end
 
         an = anWire;
         seg = segWire;
