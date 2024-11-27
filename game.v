@@ -35,7 +35,9 @@ module game (
     wire blinkClk;
 
     wire [15:0] randInt;
+    wire [15:0] userInput;
     wire correct;
+    wire userInputReady;
 
     clockdiv clockdivMod (
         .clk(clk),
@@ -49,8 +51,16 @@ module game (
     );
     //insert modules
 
+    keyboard_decoder keyboard_decoder (
+        .masterClk(clk)
+        .value(userInput)
+        .row(/*not sure what goes here*/)
+        .rst(btnR)
+        .valueReady(userInputReady)
+    )
+
     checkInput checkMod (
-        .userInput(),
+        .userInput(userInput),
         .randInt(randInt),
         .correct(correct)
     );
