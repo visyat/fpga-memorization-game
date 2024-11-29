@@ -4,19 +4,19 @@ module clockdiv (
     clk,
     rst,
     fastClk,
-    blinkClk,
-    readClk
+    blinkClk
+    // readClk
 );
     input clk;
     input rst; 
 
     output reg fastClk;
     output reg blinkClk;
-    output reg readClk;
+    // output reg readClk;
 
     reg [31:0] fastCounter;
     reg [31:0] blinkCounter;
-    reg [31:0] readCounter;
+    // reg [31:0] readCounter;
 
     always @(posedge clk) begin
         //Fast ==> 50-700 Hz 
@@ -45,6 +45,7 @@ module clockdiv (
             blinkCounter <= blinkCounter + 1;
         end
 
+        /*
         if (rst) begin
             readCounter <= 0;
             readClk <= 0;
@@ -56,5 +57,6 @@ module clockdiv (
         else begin
             readCounter <= readCounter + 1;
         end
+        */
     end
 endmodule

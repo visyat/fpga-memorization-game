@@ -1,8 +1,8 @@
-module randnum_tb;
+module display_tb;
     reg clk;
     wire fastClk;
     wire blinkClk;
-    wire readClk;
+    // wire readClk;
     
     reg rst;
     wire [15:0] randInt;
@@ -13,15 +13,15 @@ module randnum_tb;
     wire correct;
     reg displayPhase;
 
-    wire an;
-    wire seg;
+    wire [3:0] an;
+    wire [6:0] seg;
 
-    clockdv clockdiv_mod(
+    clockdiv clockdiv_mod(
         .clk(clk),
         .rst(rst),
         .fastClk(fastClk),
-        .blinkClk(blinkClk),
-        .readClk(readClk)
+        .blinkClk(blinkClk)
+        // .readClk(readClk)
     );
     randnum randnum_mod(
         .rst(rst),
@@ -51,9 +51,8 @@ module randnum_tb;
 
         clk <= 0;
         displayPhase <= 1;
-
-        forever begin
-            #10 clk <= ~clk;
-        end
+    end
+    always @(*) begin
+        #5 clk <= ~clk;
     end
 endmodule

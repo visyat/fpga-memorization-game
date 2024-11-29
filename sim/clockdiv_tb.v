@@ -4,14 +4,14 @@ module clockdiv_tb;
 
     wire fastClk;
     wire blinkClk;
-    wire readClk;
+    // wire readClk;
 
-    clockdv clockdiv_mod(
+    clockdiv clockdiv_mod(
         .clk(clk),
         .rst(rst),
         .fastClk(fastClk),
-        .blinkClk(blinkClk),
-        .readClk(readClk)
+        .blinkClk(blinkClk)
+        // .readClk(readClk)
     );
 
     initial begin
@@ -19,9 +19,9 @@ module clockdiv_tb;
         clk <= 0;
 
         #10 rst <= 0;
-        forever begin
-            #10 clk <= ~clk;
-        end
+    end
+    always @(*) begin
+        #10 clk <= ~clk;
     end
 
 endmodule

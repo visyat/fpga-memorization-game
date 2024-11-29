@@ -5,6 +5,8 @@ module game (
     rst,
     btnR,
     btnS,
+    PS2Clk,
+    PS2Data,
     an,
     seg
 );
@@ -12,6 +14,9 @@ module game (
     input rst;
     input btnR;
     input btnS;
+
+    input PS2Clk;
+    input PS2Data;
 
     output reg [3:0] an;
     output reg [6:0] seg;
@@ -45,28 +50,25 @@ module game (
         .randInt(randInt)
     );
 
-    // parse keyboard data 
-        // 1. debouncers for keyboard buttons
-        // 2. load characters into some module 
-    /*
-    module userInputLoader(
-        ...
-        .userInt(userInt),
-        .ready(ready)
+    keyboard keyboard_mod(
+        .clk(clk),
+        .rst(rst),
+        .PS2Clk(PS2Clk),
+        .PS2Data(PS2Data),
+        .ready(ready),
+        .userInt(userInt)
     );
-    */
-
     checkInput check_mod(
         .userInt(userInt),
         .randInt(randInt),
         .correct(correct)
     );
     display display_mod(
-        .displayPhase(displayPhase), // PENDING
+        .displayPhase(displayPhase),
         .correct(correct), 
         .randInt(randInt),
-        .userInput(userInput), // PENDING
-        .inputReady(ready), // PENDING
+        .userInput(userInput),
+        .inputReady(ready),
         .rst(rst), 
         .fastClk(fastClk),
         .blinkClk(blinkClk),
@@ -85,6 +87,8 @@ module game (
         end else begin
           if (displayDelay == 500000000) begin
             displayPhase = 0;
+          end else if (displayDelay < 500000000) begin
+            displayDelay = displayDelay + 1;
           end
         end
     end
