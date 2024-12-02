@@ -3,6 +3,7 @@ module randnum_tb;
     wire [15:0] randInt;
 
     randnum randnum_mod(
+        .clk(clk),
         .rst(rst),
         .randInt(randInt)
     );

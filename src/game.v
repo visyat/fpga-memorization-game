@@ -46,6 +46,7 @@ module game (
         .readClk(readClk)
     );
     randnum randnum_mod (
+        .clk(clk),
         .rst(rst),
         .randInt(randInt)
     );
