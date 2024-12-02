@@ -14,32 +14,47 @@ module random_num_gen(
     output reg [3:0] num3;
     output reg [3:0] num4;
     
-    reg [5:0] data;  
-    reg start = 1;
-    wire feedback = data[5] ^ data[4] ^ data[3] ^ data[2];
-    
-    wire [3:0] raw_num1 = {2'b00, data[1:0]};
-    wire [3:0] raw_num2 = {2'b00, data[3:2]};
-    wire [3:0] raw_num3 = {2'b00, data[5:4]};
-    wire [3:0] raw_num4 = {2'b00, (data[5:4]^data[3:2])};
-    
-    always @(posedge clk or posedge rst) begin
-        if (rst && start) begin
-            data <= 6'b1;
-            num1 <= 4'd0;
-            num2 <= 4'd1;
-            num3 <= 4'd2;
-            num4 <= 4'd3;
-            start = 0;
-        end else begin
-            data <= {data[4:0], feedback};
-            
-            if (raw_num1 <= 4'd9) num1 <= raw_num1;
-            if (raw_num2 <= 4'd9) num2 <= raw_num2;
-            if (raw_num3 <= 4'd9) num3 <= raw_num3;
-            if (raw_num4 <= 4'd9) num4 <= raw_num4;
+  	reg start = 1;
+  	
+  	reg [4:0] data1;
+  	wire feedback1 = data1[4] ^ data1[1];
+
+  	reg [4:0] data2;
+  	wire feedback2 = data2[3] ^ data2[1];
+  
+  	reg [4:0] data3;
+ 	wire feedback3 = data3[3] ^ data3[2];
+  
+  	reg [4:0] data4;
+  	wire feedback4 = data4[4] ^ data4[2];
+
+  	always @(posedge clk or posedge rst)
+      if (rst && start) begin
+        data1 <= 4'b1111;
+        data2 <= 4'b1110;
+        data3 <= 4'b1101;
+        data4 <= 4'b1100;
+        
+        start = 0;
+      end else begin
+        data1 <= {data1[3:0], feedback1};
+        data2 <= {data2[3:0], feedback2};
+        data3 <= {data3[3:0], feedback3};
+        data4 <= {data4[3:0], feedback4};
+        
+        if (data1 <= 4'd9) begin
+          num1 = data1;
         end
-    end
+        if (data2 <= 4'd9) begin
+          num2 = data2;
+        end
+        if (data3 <= 4'd9) begin
+          num3 = data3;
+        end
+        if (data4 <= 4'd9) begin
+          num4 = data4;
+        end
+      end
 endmodule
 
 module randnum (
@@ -47,6 +62,7 @@ module randnum (
     rst,
     randInt
 );
+  	input clk;
     input rst;
     output reg [15:0] randInt;
 
