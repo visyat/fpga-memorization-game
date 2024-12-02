@@ -21,16 +21,16 @@ module keyboard(
     integer i; // index for word
     integer j; // index for userInt
 
-    /*
     debouncer db_clk(
+        .clk(clk),
         .ps2clk(PS2Clk),
         .db_ps2clk(db_ps2clk)
     );
     debouncer db_kdata(
+        .clk(clk),
         .ps2data(PS2Data),
         .db_ps2data(db_ps2data)
     );
-    */
 
     reg prev_ps2clk;
     wire falling_edge;
@@ -108,4 +108,28 @@ module keyboard(
     end  
     endfunction
 
+endmodule
+
+module debouncer(
+    clk,
+    I,
+    O
+);
+    input clk;
+    input I;
+    output reg O;
+
+    reg [7:0] count;
+    reg Iv=0;
+    
+    always@(posedge clk)
+        if (I == Iv) begin
+            if (count == 255)
+                O <= I;
+            else
+                count <= count + 1'b1;
+        end else begin
+            count <= 'b0;
+            Iv <= I;
+        end
 endmodule
