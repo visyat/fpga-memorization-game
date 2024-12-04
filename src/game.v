@@ -5,8 +5,16 @@ module game (
     rst,
     btnR,
     btnS,
-    rows,
-    cols,
+    J1,
+    J2,
+    J3,
+    J4,
+    J5,
+    J6,
+    J7,
+    J8,
+    J9,
+    J10,
     an,
     seg
 );
@@ -61,11 +69,17 @@ module game (
 
     keyboard_decoder keyboard_decoder(
         .clk(clk),
+        .J7(J7),
+        .J8(J8),
+        .J9(J9),
+        .J10(J10),
         .rst(btnR),
-        .row(rows),
-        .valueReady(ready),
+        .J1(J1),
+        .J2(J2),
+        .J3(J3),
+        .J4(J4),
         .value(userInt),
-        .col(cols)
+        .valueReady(ready)
     );
     checkInput check_mod(
         .userInt(userInt),
