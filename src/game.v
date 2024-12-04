@@ -5,18 +5,22 @@ module game (
     rst,
     btnR,
     btnS,
-    PS2Clk,
-    PS2Data,
+//    PS2Clk,
+//    PS2Data,
+    rows,
+    cols,
     an,
     seg
 );
+    input [3:0] rows;
+    output [3:0] cols;
     input clk;
     input rst;
     input btnR;
     input btnS;
 
-    input PS2Clk;
-    input PS2Data;
+//    input PS2Clk;
+//    input PS2Data;
 
     output reg [3:0] an;
     output reg [6:0] seg;
@@ -40,24 +44,21 @@ module game (
 
     clockdiv clockdiv_mod (
         .clk(clk),
-        .rst(rst),
+        .rst(btnR),
         .fastClk(fastClk),
-        .blinkClk(blinkClk),
-        .readClk(readClk)
+        .blinkClk(blinkClk)
     );
     randnum randnum_mod (
-        .clk(clk),
-        .rst(rst),
+        .rst(btnR),
         .randInt(randInt)
     );
 
-    keyboard keyboard_mod(
+    keyboard_decoder keyboard_decoder(
         .clk(clk),
-        .rst(rst),
-        .PS2Clk(PS2Clk),
-        .PS2Data(PS2Data),
-        .ready(ready),
-        .userInt(userInt)
+        .rst(btnR),
+        .row(rows),
+        .valueReady(ready),
+        .value(userInt)
     );
     checkInput check_mod(
         .userInt(userInt),
@@ -70,7 +71,7 @@ module game (
         .randInt(randInt),
         .userInput(userInput),
         .inputReady(ready),
-        .rst(rst), 
+        .rst(btnR), 
         .fastClk(fastClk),
         .blinkClk(blinkClk),
         .anodeActivate(anWire),
@@ -79,10 +80,10 @@ module game (
 
     always @(*) begin
         an = anWire;
-        seg = segWire
+        seg = segWire;
     end
     always @(posedge clk) begin
-        if (rst) begin
+        if (btnR) begin
             displayPhase = 1;
             displayDelay = 0;
         end else begin

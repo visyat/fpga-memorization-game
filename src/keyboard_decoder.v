@@ -1,5 +1,5 @@
 module keyboard_decoder (
-    input masterClk,          // Master clock signal
+    input clk,          // Master clock signal
     input [3:0] row,          // Row signals from the keyboard (active low)
     input rst,
     output reg [15:0] value,   // 16-bit value to store the last 4 pressed digits (4 * 4-bit values)
@@ -9,23 +9,16 @@ module keyboard_decoder (
     reg [1:0] selector = 0;   // Selector for scanning different rows (4 rows)
     reg [3:0] curr_value = 15;
     reg [31:0] collect_input_timer = 0;
-
-    initial begin
-        valueReady <= 0;
-        value <= 4'ffff;
-        collect_input_timer <= 0;
-        curr_value <= 15;
-    end
-    always @(posedge masterClk or posedge rst) begin
-        if (rst) {
-            value <= 4'ffff;
+    always @(posedge clk) begin
+        if (rst) begin
+            value <= 16'hFFFF;
             valueReady <= 0;
             collect_input_timer <= 0;
             curr_value <= 15;
-        }
+        end
         if (!valueReady) begin
             collect_input_timer <= collect_input_timer + 1; 
-            selector <= selector + 1
+            selector <= selector + 1;
             case(selector)
                 2'b00: begin 
                     case(row)
@@ -57,9 +50,9 @@ module keyboard_decoder (
                 value <= {value[11:0], curr_value};
                 curr_value <= 15;
             end
-            if (value[0] != 15 && value[1] != 15 && value[2] != 15 && value[3] != 15) {
+            if (value[0] != 15 && value[1] != 15 && value[2] != 15 && value[3] != 15) begin
                 valueReady <= 1;
-            }
+            end
         end
     end
 endmodule
