@@ -5,8 +5,6 @@ module game (
     rst,
     btnR,
     btnS,
-//    PS2Clk,
-//    PS2Data,
     rows,
     cols,
     an,
@@ -18,9 +16,6 @@ module game (
     input rst;
     input btnR;
     input btnS;
-
-//    input PS2Clk;
-//    input PS2Data;
 
     output reg [3:0] an;
     output reg [6:0] seg;

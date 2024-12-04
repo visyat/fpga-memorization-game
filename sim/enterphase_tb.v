@@ -1,8 +1,7 @@
-module display_tb;
+module enterphase_tb;
     reg clk;
     wire fastClk;
     wire blinkClk;
-    // wire readClk;
     
     reg rst;
     wire [15:0] randInt;
@@ -21,7 +20,6 @@ module display_tb;
         .rst(rst),
         .fastClk(fastClk),
         .blinkClk(blinkClk)
-        // .readClk(readClk)
     );
     randnum randnum_mod(
         .rst(rst),
@@ -50,7 +48,9 @@ module display_tb;
         #10 rst <= 0;
 
         clk <= 0;
-        displayPhase <= 1;
+        displayPhase <= 0;
+        ready <= 0;
+        userInt <= 16'hFFF4;
     end
     always @(*) begin
         #5 clk <= ~clk;
