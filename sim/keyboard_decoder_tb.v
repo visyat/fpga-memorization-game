@@ -2,16 +2,17 @@
 
 module tb_keyboard_decoder;
 
+
     reg clk;
-    reg rst;
     reg [3:0] row;
+    reg rst;
+
+    // Outputs
     wire [15:0] value;
     wire valueReady;
     wire [3:0] col;
 
-    always #1 clk = ~clk;
-
-    keyboard_decoder keyboard_decoder (
+    keyboard_decoder uut (
         .clk(clk),
         .row(row),
         .rst(rst),
@@ -20,73 +21,50 @@ module tb_keyboard_decoder;
         .col(col)
     );
 
-    // Testbench logic
+    initial clk = 0;
+    always #5 clk = ~clk;
+
+    // Task to simulate row signal input
+    task simulate_row_input;
+        input [3:0] input_row;
+        begin
+            row = input_row;
+            #160;
+            row = 4'b1111; 
+            #160; 
+        end
+    endtask
+
     initial begin
         // Initialize inputs
-        clk = 0;
-        rst = 1;  // Reset is active initially
-        row = 4'b1111; // No key pressed (all rows inactive)
-
-
-        #20;
-        rst = 0; //turn off reset
-
-        #40;
-
-        // Simulate 0
-        row = 4'b0111; // Key pressed in row 0
-        #80;
-
-        row = 4'b1111; //change the value to no key press
-        #100;
-
-        if (valueReady) begin
-            $display("Value ready: %h", value);
-        end else begin
-            $display("Value not ready yet: %h", value);
-        end
-
-        // Simulate 4
-        row = 4'b1011;
-        #80;
-
-        row = 4'b1111; //change the value to no key press
-        #100;
-
-        if (valueReady) begin
-            $display("Value ready: %h", value);
-        end else begin
-            $display("Value not ready yet: %h", value);
-        end
-
-        // simulate 7
-        row = 4'b1101;
-        #80;
-
-        row = 4'b1111; //change the value to no key press
-        #100;
-
-        if (valueReady) begin
-            $display("Value ready: %h", value);
-        end else begin
-            $display("Value not ready yet: %h", value);
-        end
-
-        // simulate 0
-        row = 4'b1110;
-        #80;
-
         row = 4'b1111;
-        #100;
+        rst = 1;
 
-        if (valueReady) begin
-            $display("Value ready: %h", value);
-        end else begin
-            $display("Value not ready yet");
-        end
+        // Apply reset
+        #20;
+        rst = 0;
 
-        #100;
-        $finish;
+        // Simulate key presses
+        simulate_row_input(4'b0111); // Simulate pressing '1'
+        simulate_row_input(4'b1011); // Simulate pressing '5'
+        simulate_row_input(4'b1101); // Simulate pressing '9'
+        simulate_row_input(4'b1110); // Simulate pressing '0'
+        simulate_row_input(4'b1011); // Simulate pressing '5'
+
+        // Wait to allow valueReady to be asserted
+        #1000;
+
+        // Apply reset again
+        rst = 1;
+        #20;
+        rst = 0;
+
+        simulate_row_input(4'b0111); // Simulate pressing '1'
+        simulate_row_input(4'b1011); // Simulate pressing '4'
+        simulate_row_input(4'b1101); // Simulate pressing '7'
+
+        #1000;
+
+        $stop;
     end
-
 endmodule
