@@ -22,6 +22,7 @@ module enterphase_tb;
         .blinkClk(blinkClk)
     );
     randnum randnum_mod(
+        .clk(clk),
         .rst(rst),
         .randInt(randInt)
     );
@@ -44,15 +45,14 @@ module enterphase_tb;
     );
 
     initial begin
-        rst <= 1;
-        #10 rst <= 0;
-
         clk <= 0;
+        rst <= 1;
+        #130 rst <= 0;
+
         displayPhase <= 0;
         ready <= 0;
-        userInt <= 16'hFFF4;
+//        userInt <= randInt;
+        userInt <= 16'hFF12;
     end
-    always @(*) begin
-        #5 clk <= ~clk;
-    end
+    always #5 clk <= ~clk;
 endmodule

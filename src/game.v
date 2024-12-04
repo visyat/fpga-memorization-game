@@ -34,17 +34,28 @@ module game (
 
     wire correct;
 
-    reg displayPhase;
-    reg [29:0] displayDelay;
+    wire rst_db;
+    wire displayPhase;
 
+    rst_debouncer rst_db_mod (
+        .rst(btnR), 
+        .clk(clk),
+        .rst_db(rst_db)
+    );
+    phaseChange phase_mod (
+        .rst(btnR),
+        .clk(clk),
+        .displayPhase(displayPhase)
+    );
     clockdiv clockdiv_mod (
         .clk(clk),
         .rst(btnR),
         .fastClk(fastClk),
         .blinkClk(blinkClk)
     );
-    randnum randnum_mod (
-        .rst(btnR),
+    randnum randnum_mod(
+        .clk(clk),
+        .rst(rst_db),
         .randInt(randInt)
     );
 
@@ -77,18 +88,6 @@ module game (
     always @(*) begin
         an = anWire;
         seg = segWire;
-    end
-    always @(posedge clk) begin
-        if (btnR) begin
-            displayPhase = 1;
-            displayDelay = 0;
-        end else begin
-          if (displayDelay == 500000000) begin
-            displayPhase = 0;
-          end else if (displayDelay < 500000000) begin
-            displayDelay = displayDelay + 1;
-          end
-        end
     end
 
 endmodule

@@ -43,16 +43,16 @@ module random_num_gen(
         data4 <= {data4[3:0], feedback4};
         
         if (data1 <= 4'd9) begin
-          num1 = data1;
+          num1 <= data1;
         end
         if (data2 <= 4'd9) begin
-          num2 = data2;
+          num2 <= data2;
         end
         if (data3 <= 4'd9) begin
-          num3 = data3;
+          num3 <= data3;
         end
         if (data4 <= 4'd9) begin
-          num4 = data4;
+          num4 <= data4;
         end
       end
 endmodule
@@ -79,14 +79,11 @@ module randnum (
         .num4(num4)
     );
     reg [15:0] storeRand;
-    always @(*) begin
+    always @(posedge clk) begin
         if (rst) begin
-            storeRand[3:0] = num1;
-            storeRand[7:4] = num2;
-            storeRand[11:8] = num3;
-            storeRand[15:12] = num4;
+            storeRand = {num4,num3,num2,num1};
         end
-        randInt = storeRand;
+        randInt <= storeRand;
     end
 endmodule
 

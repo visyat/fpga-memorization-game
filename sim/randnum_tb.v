@@ -9,17 +9,14 @@ module randnum_tb;
         .randInt(randInt)
     );
     initial begin
-        rst <= 1;
-        #10 rst <= 0;
-
         clk <= 0;
+        rst <= 1;
+        #130 rst <= 0;
+//        forever begin
+//            rst = 0;
+//            #10 rst = 1;
+//            #1;
+//        end
     end
-    always @(*) begin
-        #5 clk <= ~clk;
-    end
-    always @(*) begin
-        rst = 0;
-        #10 rst = 1;
-        #1;
-    end
+    always #5 clk <= ~clk;
 endmodule
