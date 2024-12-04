@@ -53,7 +53,8 @@ module game (
         .rst(btnR),
         .row(rows),
         .valueReady(ready),
-        .value(userInt)
+        .value(userInt),
+        .col(cols)
     );
     checkInput check_mod(
         .userInt(userInt),
