@@ -13,7 +13,7 @@ module keyboard_decoder (
     output reg valueReady,
 );
     reg pressed;
-    reg number;
+    reg [3:0] number;
 
     initial begin
         value <= 16'b1111111111111111;
@@ -40,13 +40,10 @@ module keyboard_decoder (
         end
     end
     always @ (negedge pressed) begin
-
-        else begin
-            if (number <= 9 && number >= 0) begin
-                value <= {value[11:0], number};
-                if (value[3:0] != 15 && value[7:4] != 15 && value[11:8] != 15 && value[15:12] != 15) begin
-                    valueReady <= 1;
-                end
+        if (number <= 9 && number >= 0 && valueReady != 1) begin
+            value <= {value[11:0], number};
+            if (value[3:0] != 15 && value[7:4] != 15 && value[11:8] != 15 && value[15:12] != 15) begin
+                valueReady <= 1;
             end
         end
     end
