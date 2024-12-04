@@ -28,7 +28,7 @@ module random_num_gen(
   	reg [4:0] data4;
   	wire feedback4 = data4[4] ^ data4[2];
 
-  	always @(posedge clk or posedge rst)
+  	always @(posedge clk)
       if (rst && start) begin
         data1 <= 4'b1111;
         data2 <= 4'b1110;
