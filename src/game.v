@@ -9,8 +9,6 @@ module game (
     J2,
     J3,
     J4,
-    J5,
-    J6,
     J7,
     J8,
     J9,
@@ -18,8 +16,14 @@ module game (
     an,
     seg
 );
-    input [3:0] rows;
-    output [3:0] cols;
+    input J7;
+    input J8;
+    input J9;
+    input J10;
+    output J1;
+    output J2;
+    output J3;
+    output J4;
     input clk;
     input rst;
     input btnR;
@@ -51,13 +55,13 @@ module game (
         .rst_db(rst_db)
     );
     phaseChange phase_mod (
-        .rst(btnR),
+        .rst(rst_db),
         .clk(clk),
         .displayPhase(displayPhase)
     );
     clockdiv clockdiv_mod (
         .clk(clk),
-        .rst(btnR),
+        .rst(rst_db),
         .fastClk(fastClk),
         .blinkClk(blinkClk)
     );
@@ -68,12 +72,12 @@ module game (
     );
 
     keyboard_decoder keyboard_decoder(
-        .clk(clk),
+        .clk(fastClk),
         .J7(J7),
         .J8(J8),
         .J9(J9),
         .J10(J10),
-        .rst(btnR),
+        .rst(rst_db),
         .J1(J1),
         .J2(J2),
         .J3(J3),
@@ -90,7 +94,7 @@ module game (
         .displayPhase(displayPhase),
         .correct(correct), 
         .randInt(randInt),
-        .userInput(userInput),
+        .userInput(userInt),
         .inputReady(ready),
         .rst(btnR), 
         .fastClk(fastClk),

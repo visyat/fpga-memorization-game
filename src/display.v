@@ -14,7 +14,7 @@ module display(
     input correct;
 
     input [15:0] randInt;
-    input [15:0] userInput;
+    input wire [15:0] userInput;
     input inputReady;
     
     input rst;
@@ -147,6 +147,7 @@ module display(
             4'b1100: LED_out = 7'b0010010; // "S"
             4'b1101: LED_out = 7'b1001000; // "N"
             4'b1110: LED_out = 7'b1000000; // "O"
+            4'b1111: LED_out = 7'b1111111; // 
             default: LED_out = 7'b1111111;
         endcase
     end
